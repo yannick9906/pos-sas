@@ -66,7 +66,23 @@
          * @return array Normal dict array with data
          */
         public static function getList($page = 1, $pagesize = 75, $search = "") {
+            $pdo = new PDO_MYSQL();
+            $startElem = ($page-1) * $pagesize;
+            $endElem = $pagesize;
+            $stmt = $pdo->queryPagedList("pos_item", $startElem, $endElem, ["itemName","barcode"], $search);
 
+            $hits = self::getListMeta($page, $pagesize, $search);
+            while($row = $stmt->fetchObject()) {
+                array_push($hits["items"], [
+                    "iID" => $row->iID,
+                    "itemName" => utf8_encode($row->itemName),
+                    "inStock" => $row->inStock,
+                    "priceBuy" => $row->priceBuy,
+                    "priceSell" => $row->priceSell,
+                    "check" => md5($row->iID+$row->itemName+$row->inStock+$row->priceBuy+$row->priceSell)
+                ]);
+            }
+            return $hits;
         }
 
         /**
@@ -80,7 +96,45 @@
          * @return Item[]
          */
         public static function getListObjects($page, $pagesize, $search) {
+            $pdo = new PDO_MYSQL();
+            $startElem = ($page-1) * $pagesize;
+            $endElem = $pagesize;
+            $stmt = $pdo->queryPagedList("pos_item", $startElem, $endElem, ["itemName","barcode"], $search);
+            
+            $hits = [];
+            while($row = $stmt->fetchObject()) {
+                array_push($hits, new Item(
+                    $row->iID,
+                    $row->itemName,
+                    $row->inStock,
+                    $row->priceBuy,
+                    $row->priceSell,
+                    $row->barcode)
+                );
+            }
+            return $hits;
+        }
 
+        /**
+         * Returns the array stub for the getLists() method
+         *
+         * @param int $page
+         * @param int $pagesize
+         * @param string $search
+         * @return array
+         */
+        public static function getListMeta($page, $pagesize, $search) {
+            $pdo = new PDO_MYSQL();
+            if($search != "") $res = $pdo->query("select count(*) as size from pos_item where lower(concat(itemName,' ',barcode)) like lower(:search)", [":search" => "%".$search."%"]);
+            else $res = $pdo->query("select count(*) as size from pos_item");
+            $size = $res->size;
+            $maxpage = ceil($size / $pagesize);
+            return [
+                "size" => $size,
+                "maxPage" => $maxpage,
+                "page" => $page,
+                "items" => []
+            ];
         }
 
         /**
@@ -94,16 +148,37 @@
          */
         public static function createNew($itemName, $inStock, $priceBuy, $priceSell, $barcode) {
             $pdo = new PDO_MYSQL();
-            $pdo->query("insert into pos_item(itemName, inStock, priceBuy, priceSell, barcode) values (:name, :stock, :priceBuy, :priceSell, :barcode)",
-                [":name" => $itemName, ":inStock" => $inStock, ":priceBuy" => $priceBuy, ":priceSell" => $priceSell, ":barcode" => $barcode]);
+            $pdo->queryInsert("pos_item",
+                ["name" => $itemName,
+                 "inStock" => $inStock,
+                 "priceBuy" => $priceBuy,
+                 "priceSell" => $priceSell,
+                 "barcode" => $barcode]
+            );
         }
 
         /**
          * Save the changes made to an instance of this class into the DB.
          */
         public function saveChanges() {
-            $this->pdo->query("update pos_item set itemName = :name, inStock = :inStock, priceBuy = :priceBuy, priceSell = :priceSell, barcode = :barcode where iID = :iid",
-                [":iid" => $this->iID, ":name" => $this->itemName, ":inStock" => $this->inStock, ":priceBuy" => $this->priceBuy, ":priceSell" => $this->priceSell, ":barcode" => $this->barcode]);
+            $this->pdo->queryUpdate("pos_item",
+                ["iid" => $this->iID,
+                 "name" => $this->itemName,
+                 "inStock" => $this->inStock,
+                 "priceBuy" => $this->priceBuy,
+                 "priceSell" => $this->priceSell,
+                 "barcode" => $this->barcode],
+                "iID = :iid",
+                ["iid" => $this->iID]
+            );
+        }
+
+        /**
+         * Deletes this item from db
+         */
+        public function delete() {
+            $this->pdo->query("delete from pos_item where iID = :iid",
+                [":iid" => $this->iID]);
         }
 
         /**

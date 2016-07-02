@@ -9,7 +9,7 @@
  * Alle Funktionen bitte static machen
  */
 
-namespace Entrance;
+namespace POS;
 use DateTime;
 use DateTimeZone;
 use POS\User;
