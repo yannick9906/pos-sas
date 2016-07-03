@@ -2,7 +2,7 @@
  * Created by yanni on 28.04.2016.
  */
 function doLogout() {
-    $.getJSON("userLogin.php?action=logout", null, function(data) {
+    $.getJSON("api/users/auth.php?action=logout", null, function(data) {
         if(data["success"]) {
             Materialize.toast("Logout erfolgreich", 1000, "green");
         } else {
@@ -20,7 +20,7 @@ function login() {
         usrname: usrname,
         passwd: passwd
     };
-    $.post("userLogin.php?action=login", data, function(data) {
+    $.post("api/users/auth.php?action=login", data, function(data) {
         data = JSON.parse(data);
         var field = $("#usrname");
         if(data["success"] == 1) {
@@ -36,21 +36,5 @@ function login() {
             Materialize.toast('Es ist ein Fehler aufgetreten. Das tut uns leid :/', 4000, 'red');
         }
 
-    });
-}
-
-function checkUsrname() {
-    var field = $("#usrname");
-    $.getJSON("userLogin.php?action=validateUsername&username="+field.val(), null, function(data) {
-        if(field.val() == "") {
-            field.removeClass("invalid");
-            field.removeClass("valid");
-        } else if(data["success"] == 1) {
-            field.removeClass("invalid");
-            field.addClass("valid");
-        } else {
-            field.addClass("invalid");
-            field.removeClass("valid");
-        }
     });
 }

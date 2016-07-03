@@ -282,4 +282,8 @@
         public function setUPassHash($uPassHash) {
             $this->uPassHash = $uPassHash;
         }
+
+        public function comparePassHash($passHash) {
+            return $this->uPassHash == $passHash;
+        }
     }
