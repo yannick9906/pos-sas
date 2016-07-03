@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<body style="height: 100%; background-size: 100% 100%; background: url(bg.png) no-repeat 0 60px;">
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="libs/md5.js"></script>
+<script type="text/javascript" src="libs/materialize/js/materialize.min.js"></script>
+<script type="text/javascript" src="js/login.js"></script>
+
+<div class="navbar-fixed">
+    <nav class="green">
+        <div class="nav-wrapper">
+            <a href="#!" class="brand-logo hide-on-med-and-down">POS</a>
+            <a href="#!" class="brand-logo hide-on-large-only">POS</a>
+        </div>
+    </nav>
+</div>
+<div class="container">
+    <div class="row">
+        <form id="login" class="col s12 card-panel">
+            <div class="input-field col s12">
+                <input id="l_usrname" type="text">
+                <label for="l_usrname">Benutzername</label>
+            </div>
+            <div class="input-field col s12">
+                <input id="l_passwd" type="password">
+                <label for="l_passwd">Passwort</label>
+            </div>
+            <button class="btn green waves-effect waves-light col s12" onclick="login()" type="button">
+                Login
+            </button>
+            <br/>&nbsp;
+        </form>
+    </div>
+</div>
+</body>
+<head>
+        <meta charset="UTF-8">
+        <title>Yannicks 3D Drucke</title>
+
+        <link type="text/css" rel="stylesheet" href="libs/materialize/css/materialize.css"  media="screen,projection"/>
+        <link rel="stylesheet" href="libs/mdi/css/materialdesignicons.min.css" media="all" type="text/css" />
+
+        <link rel="manifest" href="manifest.json" />
+        <link rel="manifest" href="3dprint.appcache" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="theme-color" content="#ff9800" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <script>
+        $(document).ready(function() {
+            $("#btnToLogin").hide();
+            $("#register").hide();
+            if(window.location.hash.substr(1) == "Logout") {
+                doLogout();
+            }
+        });
+    </script>
+</html>
