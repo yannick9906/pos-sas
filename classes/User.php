@@ -109,16 +109,84 @@
         }
 
         /**
-         * Returns all users as a array of Userobjects from db
+         * Returns all entries matching the search and the page
          *
-         * @param string $sort
-         * @param string $filter
-         * @return User[]
+         * @param int $page
+         * @param int $pagesize
+         * @param string $search
+         *
+         * @return array Normal dict array with data
          */
-        public static function getAllUsers($sort = "", $filter = "") {
+        public static function getList($page = 1, $pagesize = 75, $search = "") {
             $pdo = new PDO_MYSQL();
-            $stmt = $pdo->queryMulti('SELECT uID FROM entrance_user '.UFILTERING[$filter].' '.USORTING[$sort]);
-            return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\User::fromUID");
+            $startElem = ($page-1) * $pagesize;
+            $endElem = $pagesize;
+            $stmt = $pdo->queryPagedList("pos_user", $startElem, $endElem, ["username","realname"], $search);
+
+            $hits = self::getListMeta($page, $pagesize, $search);
+            while($row = $stmt->fetchObject()) {
+                array_push($hits["items"], [
+                    "iID" => $row->iID,
+                    "itemName" => utf8_encode($row->itemName),
+                    "inStock" => $row->inStock,
+                    "priceBuy" => $row->priceBuy,
+                    "priceSell" => $row->priceSell,
+                    "check" => md5($row->iID+$row->itemName+$row->inStock+$row->priceBuy+$row->priceSell)
+                ]);
+            }
+            return $hits;
+        }
+
+        /**
+         * @see getList()
+         * but you'll get Objects instead of an array
+         *
+         * @param int $page
+         * @param int $pagesize
+         * @param string $search
+         *
+         * @return Item[]
+         */
+        public static function getListObjects($page, $pagesize, $search) {
+            $pdo = new PDO_MYSQL();
+            $startElem = ($page-1) * $pagesize;
+            $endElem = $pagesize;
+            $stmt = $pdo->queryPagedList("pos_user", $startElem, $endElem, ["username","realname"], $search);
+
+            $hits = [];
+            while($row = $stmt->fetchObject()) {
+                array_push($hits, new Item(
+                        $row->iID,
+                        $row->itemName,
+                        $row->inStock,
+                        $row->priceBuy,
+                        $row->priceSell,
+                        $row->barcode)
+                );
+            }
+            return $hits;
+        }
+
+        /**
+         * Returns the array stub for the getLists() method
+         *
+         * @param int $page
+         * @param int $pagesize
+         * @param string $search
+         * @return array
+         */
+        public static function getListMeta($page, $pagesize, $search) {
+            $pdo = new PDO_MYSQL();
+            if($search != "") $res = $pdo->query("select count(*) as size from pos_user where lower(concat(username,' ',realname)) like lower(:search)", [":search" => "%".$search."%"]);
+            else $res = $pdo->query("select count(*) as size from pos_user");
+            $size = $res->size;
+            $maxpage = ceil($size / $pagesize);
+            return [
+                "size" => $size,
+                "maxPage" => $maxpage,
+                "page" => $page,
+                "items" => []
+            ];
         }
 
         /**
@@ -134,8 +202,13 @@
          * Saves the Changes made to this object to the db
          */
         public function saveChanges() {
-            $this->pdo->query("UPDATE pos_user SET realname = :realname, passhash = :Passwd, username = :Username WHERE uID = :uID LIMIT 1",
-                [":realname" => $this->uRealname, ":Passwd" => $this->uPassHash, ":Username" => $this->uName, ":uID" => $this->uID]);
+            $this->pdo->queryUpdate("pos_user",
+                ["username" => $this->uName,
+                "realname" => $this->uRealname,
+                "passhash" => $this->uPassHash],
+                "uID = :uid",
+                ["uid" => $this->uID]
+            );
         }
 
         /**
@@ -144,13 +217,14 @@
          * @param $username string Username
          * @param $realname string Realname of the user
          * @param $passwdhash string md5 Hash of Password
-         * @return User The new User as an Object
          */
         public static function createUser($username, $realname, $passwdhash) {
             $pdo = new PDO_MYSQL();
-            $pdo->query("INSERT INTO pos_user(username, passhash, realname) VALUES (:Username, :Passwd, :Realname)",
-                [":Username" => $username, ":Realname" => $realname, ":Passwd" => md5($passwdhash)]);
-            return self::fromUName($username);
+            $pdo->queryInsert("pos_user",
+                ["username" => $username,
+                 "realname" => $realname,
+                 "passhash" => $passwdhash]
+            );
         }
 
         /**
