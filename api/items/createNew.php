@@ -13,9 +13,10 @@
     //$user = \POS\Util::checkSession();
 
     $itemName  = $_POST["itemName"];
-    $priceBuy  = $_POST["priceBuy"];
-    $priceSell = $_POST["priceSell"];
+    $priceBuy  = intval($_POST["priceBuy"]);
+    $priceSell = intval($_POST["priceSell"]);
+    $inStock   = intval($_POST["inStock"]);
     $barcode   = $_POST["barcode"];
 
-    \POS\Item::createNew($itemName, 0, $priceBuy, $priceSell, $barcode);
+    \POS\Item::createNew($itemName, $inStock, $priceBuy, $priceSell, $barcode);
     echo json_encode(["success" => true]);

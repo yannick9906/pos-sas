@@ -100,7 +100,7 @@
             $startElem = ($page-1) * $pagesize;
             $endElem = $pagesize;
             $stmt = $pdo->queryPagedList("pos_item", $startElem, $endElem, ["itemName","barcode"], $search);
-            
+
             $hits = [];
             while($row = $stmt->fetchObject()) {
                 array_push($hits, new Item(
@@ -149,7 +149,7 @@
         public static function createNew($itemName, $inStock, $priceBuy, $priceSell, $barcode) {
             $pdo = new PDO_MYSQL();
             $pdo->queryInsert("pos_item",
-                ["name" => $itemName,
+                ["itemName" => $itemName,
                  "inStock" => $inStock,
                  "priceBuy" => $priceBuy,
                  "priceSell" => $priceSell,
@@ -163,7 +163,7 @@
         public function saveChanges() {
             $this->pdo->queryUpdate("pos_item",
                 ["iid" => $this->iID,
-                 "name" => $this->itemName,
+                 "itemName" => $this->itemName,
                  "inStock" => $this->inStock,
                  "priceBuy" => $this->priceBuy,
                  "priceSell" => $this->priceSell,

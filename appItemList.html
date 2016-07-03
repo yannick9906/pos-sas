@@ -35,11 +35,12 @@
         <a href="#!" class="brand-logo hide-on-large-only">POS</a>
         <ul class="right hide-on-med-and-down">
             <!-- Dropdown Trigger -->
-            <!--<li class="hide-on-med-and-down" id="menu-back-d"><a onclick="back()"><i style="font-size: 32px;" class="mddi mddi-arrow-left"></i></a></li>-->
+            <li class="hide-on-med-and-down" id="menu-back-d"><a onclick="toList()"><i style="font-size: 32px;" class="mddi mddi-arrow-left"></i></a></li>
             <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Account<i class="mddi mddi-chevron-down right"></i></a></li>
         </ul>
         <ul class="side-nav fixed" id="slide-out">
             <li id="sidenav-account"><a href="appUser.html">Mein Account</a></li>
+            <li class="divider"></li>
             <li class="hide-on-large-only"><a href="appLogin.html#Logout">Logout</a></li>
             <li class="divider"></li>
             <li id="sidenav-pos"><a href="appPOS.html">Kasse</a></li>
@@ -52,7 +53,7 @@
             <li class="divider"></li>
         </ul>
         <a id="menu-norm" href="#" data-activates="slide-out" class="button-collapse"><i class="mddi mddi-menu"></i></a>
-        <!--<a id="menu-back" href="#" onclick="back()" class="button-back"><i class="mddi mddi-backburger"></i></a>-->
+        <a id="menu-back" href="#" onclick="toList()" class="button-back"><i class="mddi mddi-backburger"></i></a>
     </div>
     <div class="fixed-action-btn" id="newItemBtn" style="bottom: 45px; right: 24px;">
         <a href="#" class="btn-floating btn-large green tooltipped" onclick="toNewItem()" data-position="left" data-delay="50" data-tooltip="Artikel hinzufügen">
@@ -111,6 +112,66 @@
             </tbody>
         </table>
     </div>
+    <div class="container" id="detailItem">
+        <form class="row card-panel">
+            <div class="input-field col s12 m6">
+                <input id="iID" type="text" disabled>
+                <label for="iID">iID</label>
+            </div>
+            <div class="input-field col s12 m6">
+                <input id="itemName" type="text">
+                <label for="itemName">Artikelname</label>
+            </div>
+            <div class="input-field col s12 m4">
+                <input id="priceSell" type="number">
+                <label for="priceSell">Preis EK (Schlopo)</label>
+            </div>
+            <div class="input-field col s12 m4">
+                <input id="priceBuy" type="number">
+                <label for="priceBuy">Preis VK (Schlopo)</label>
+            </div>
+            <div class="input-field col s12 m4">
+                <input id="inStock" type="number">
+                <label for="inStock">Verfügbar</label>
+            </div>
+            <a class="btn green waves-effect waves-light col s12" onclick="updateItem()" type="button">
+                <i class="mddi mddi-check"></i>
+            </a>
+        </form>
+    </div>
+    <div class="container" id="newItem">
+        <form class="row card-panel">
+            <div class="input-field col s12 m6">
+                <input id="n_iID" type="text" disabled>
+                <label for="n_iID">iID</label>
+            </div>
+            <div class="input-field col s12 m6">
+                <input id="n_itemName" type="text">
+                <label for="n_itemName">Artikelname</label>
+            </div>
+            <div class="input-field col s12 m4">
+                <input id="n_priceSell" type="number">
+                <label for="n_priceSell">Preis EK (Schlopo)</label>
+            </div>
+            <div class="input-field col s12 m4">
+                <input id="n_priceBuy" type="number">
+                <label for="n_priceBuy">Preis VK (Schlopo)</label>
+            </div>
+            <div class="input-field col s12 m4">
+                <input id="n_inStock" type="number">
+                <label for="n_inStock">Verfügbar</label>
+            </div>
+            <div class="input-field col s12">
+                <i class="mddi mddi-barcode-scan prefix"></i>
+                <input id="n_barcode" type="text" length="13">
+                <label for="n_barcode">Barcode</label>
+            </div>
+            <br/>&nbsp;
+            <a class="btn green waves-effect waves-light col s12" onclick="createItem()" type="button">
+                <i class="mddi mddi-check"></i>
+            </a>
+        </form>
+    </div>
 </main>
 </body>
 <script>
@@ -122,6 +183,12 @@
             $('.button-collapse').sideNav({closeOnClick: false});
         else
             $('.button-collapse').sideNav({closeOnClick: true});
+
+        $("#loading").hide();
+        $("#detailItem").hide();
+        $("#newItem").hide();
+        $("#menu-back").hide();
+        $("#menu-back-d").hide();
 
         $("#filter").keyup(function () {
             searchString = $(this).val();
