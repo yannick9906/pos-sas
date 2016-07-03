@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Yannicks 3D Drucke</title>
+
+    <link type="text/css" rel="stylesheet" href="libs/materialize/css/materialize.css"  media="screen,projection"/>
+    <link rel="stylesheet" href="libs/mdi/css/materialdesignicons.min.css" media="all" type="text/css" />
+    <link rel="stylesheet" href="css/style.css" media="all" type="text/css" />
+
+    <link rel="manifest" href="manifest.json" />
+    <link rel="manifest" href="3dprint.appcache" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#ff9800" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="libs/jquery-2.2.1.min.js"></script>
+<script type="text/javascript" src="libs/quagga.min.js"></script>
+<script type="text/javascript" src="libs/materialize/js/materialize.min.js"></script>
+<script type="text/javascript" src="js/appItemIn.js"></script>
+
+<!-- Dropdown Structure -->
+<ul id="dropdown1" class="dropdown-content">
+    <li><a href="appUser.html">Mein Account</a></li>
+    <li class="divider"></li>
+    <li><a href="appLogin.html#Logout">Abmelden</a></li>
+</ul>
+<nav class="green">
+    <div class="nav-wrapper">
+        <a href="#!" class="brand-logo hide-on-med-and-down" style="padding-left: 250px;">POS</a>
+        <a href="#!" class="brand-logo hide-on-large-only">POS</a>
+        <ul class="right hide-on-med-and-down">
+            <!-- Dropdown Trigger -->
+            <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Account<i class="mddi mddi-chevron-down right"></i></a></li>
+        </ul>
+        <ul class="side-nav fixed" id="slide-out">
+            <li id="sidenav-account"><a href="appUser.html">Mein Account</a></li>
+            <li class="divider"></li>
+            <li class="hide-on-large-only"><a href="appLogin.html#Logout">Logout</a></li>
+            <li class="divider"></li>
+            <li id="sidenav-pos"><a href="appPOS.html">Kasse</a></li>
+            <li class="divider padding"></li>
+            <li class="no-padding bolden"><a>Lager</a></li>
+            <li class="divider padding"></li>
+            <li id="sidenav-list"><a href="appItemList.html">Liste</a></li>
+            <li class="divider padding"></li>
+            <li id="sidenav-new" class="active"><a href="appItemIn.html">Einlagern</a></li>
+            <li class="divider"></li>
+        </ul>
+        <a id="menu-norm" href="#" data-activates="slide-out" class="button-collapse"><i class="mddi mddi-menu"></i></a>
+    </div>
+</nav>
+<main>
+    <style>
+        .viewport video {
+            position: fixed;
+            width: 100%;
+            height: auto;
+            top: 65px;
+            left: 240px;
+            right: 0;
+            z-index: 500;
+        }
+
+        .drawingBuffer {
+            position: absolute;
+            width: 100%;
+            height: auto;
+            top: 65px;
+            left: 240px;
+            right: 0;
+            z-index: 1000;
+        }
+        @media only screen and (max-width : 992px) {
+            .viewport video {
+                left: 0px;
+            }
+
+            .drawingBuffer {
+                left: 0px;
+            }
+        }
+    </style>
+    <div class="viewport" id="interactive" style="max-width: 100%">
+
+    </div>
+    <div class="container row" id="itemInfo" style="z-index: 100000;">
+        <div class="card-panel col s12 row">
+            <b>Artikelname: </b><span id="i_itemName"></span><br/>
+            <b>Preis EK: </b>   <span id="i_priceBuy"></span> S<br/>
+            <b>Preis VK: </b>   <span id="i_priceSell"></span> S<br/>
+            <b>Verfügbar: </b>  <span id="i_inStock"></span><span class="green-text"> +1</span> Stk.<br/>
+            <br/>
+            <a href="#!" onclick="doScan()" class="btn green center col s12">Nächstes</a><br/>&nbsp;
+        </div>
+    </div>
+</main>
+</body>
+<script>
+    $(document).ready(function() {
+        $(".dropdown-button").dropdown();
+
+        // Initialize collapse button
+        if(window.innerWidth > 992)
+            $('.button-collapse').sideNav({closeOnClick: false});
+        else
+            $('.button-collapse').sideNav({closeOnClick: true});
+        $("#itemInfo").hide();
+        doScan();
+    });
+</script>
+</html>
