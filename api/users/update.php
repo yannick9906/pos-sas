@@ -17,7 +17,7 @@
 
     if(isset($_POST["username"])) $userEdit->setUName    ($_POST["username"]);
     if(isset($_POST["realname"])) $userEdit->setURealname($_POST["realname"]);
-    if(isset($_POST["passwd"]))   $userEdit->setUPassHash(md5($_POST["passwd"]));
+    if(isset($_POST["passwd"]))   $userEdit->setUPassHash($_POST["passwd"]);
 
     $userEdit->saveChanges();
     echo json_encode(["success" => true]);

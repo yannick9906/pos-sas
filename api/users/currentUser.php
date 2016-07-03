@@ -2,8 +2,8 @@
     /**
      * Created by PhpStorm.
      * User: yanni
-     * Date: 02.07.2016
-     * Time: 16:11
+     * Date: 03.07.2016
+     * Time: 16:04
      */
 
     require_once "../../classes/PDO_Mysql.php";
@@ -11,9 +11,6 @@
     require_once "../../classes/Util.php";
     $user = \POS\Util::checkSession();
 
-    $page = intval($_GET["page"]);
-    $pagesize = 75;
-    $search = $_GET["search"];
+    $json = json_encode($user->asArray());
 
-    $users = \POS\User::getList($page, $pagesize, $search);
-    echo json_encode($items);
+    echo $json;

@@ -77,8 +77,8 @@
          */
         public function asArray() {
             return [
-                "id" => $this->uID,
-                "usrname" => $this->uName,
+                "uID" => $this->uID,
+                "username" => $this->uName,
                 "realname" => $this->uRealname
             ];
         }
@@ -126,12 +126,10 @@
             $hits = self::getListMeta($page, $pagesize, $search);
             while($row = $stmt->fetchObject()) {
                 array_push($hits["items"], [
-                    "iID" => $row->iID,
-                    "itemName" => utf8_encode($row->itemName),
-                    "inStock" => $row->inStock,
-                    "priceBuy" => $row->priceBuy,
-                    "priceSell" => $row->priceSell,
-                    "check" => md5($row->iID+$row->itemName+$row->inStock+$row->priceBuy+$row->priceSell)
+                    "uID" => $row->iID,
+                    "username" => utf8_encode($row->itemName),
+                    "realname" => utf8_encode($row->inStock),
+                    "check" => md5($row->uID+$row->username+$row->realname)
                 ]);
             }
             return $hits;
@@ -145,7 +143,7 @@
          * @param int $pagesize
          * @param string $search
          *
-         * @return Item[]
+         * @return User[]
          */
         public static function getListObjects($page, $pagesize, $search) {
             $pdo = new PDO_MYSQL();
@@ -155,13 +153,11 @@
 
             $hits = [];
             while($row = $stmt->fetchObject()) {
-                array_push($hits, new Item(
-                        $row->iID,
-                        $row->itemName,
-                        $row->inStock,
-                        $row->priceBuy,
-                        $row->priceSell,
-                        $row->barcode)
+                array_push($hits, new User(
+                        $row->uID,
+                        $row->username,
+                        $row->realname,
+                        $row->passHash)
                 );
             }
             return $hits;
@@ -203,8 +199,8 @@
          */
         public function saveChanges() {
             $this->pdo->queryUpdate("pos_user",
-                ["username" => $this->uName,
-                "realname" => $this->uRealname,
+                ["username" => utf8_decode($this->uName),
+                "realname" => utf8_decode($this->uRealname),
                 "passhash" => $this->uPassHash],
                 "uID = :uid",
                 ["uid" => $this->uID]

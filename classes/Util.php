@@ -21,16 +21,16 @@ class Util {
     public static function checkSession() {
         session_start();
         if(!isset($_SESSION["uID"])) {
-            self::forwardTo("logon.php?badsession=1");
+            echo json_encode(["success" => false, "error" => "NoLogin"]);
             exit;
         } else {
             $user = User::fromUID($_SESSION["uID"]);
             if($_GET["m"] == "debug") {
-                echo "<pre style='display: block; position: fixed; z-index: 100000; background-color: white;'>\n";
+                echo "<pre style='display: block; position: absolute'>\n";
                 echo "[0] Perm Array Information:\n";
-                echo "--> No Permission System loaded.";
+                echo "Not available on this platform";
                 echo "\n[1] Permission Information:\n";
-                echo "--> No Permission System loaded.";
+                echo "Not available on this platform";
                 echo "\n[2] User Information:\n";
                 echo $user->toString();
                 echo "\n[3] Client Information:\n";
