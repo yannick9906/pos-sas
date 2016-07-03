@@ -54,17 +54,15 @@
             $db = $this->connect();
 
             if($search != "") {
-                end($searchableFields);
-                $lastField = key($searchableFields);
-                $bindString = ' ';
+                $lastField = $searchableFields[sizeof($searchableFields)-1];
+                $bindString = '';
                 foreach ($searchableFields as $field) {
                     $bindString .= $field;
-                    $bindString .= ($field === $lastField ? '' : '');
+                    $bindString .= ($field === $lastField ? '' : '," ",');
                 }
 
-                $stmt = $db->prepare("SELECT * FROM " . $tablename . " WHERE lower(concat(" . $bindString . ")) LIKE lower(:search) LIMIT :start,:end");
-
-                $stmt->bindValue(":search", "%".$search."%", PDO::PARAM_STR);
+                $stmt = $db->prepare("SELECT * FROM " . $tablename . " WHERE lower(concat(" . $bindString . ")) LIKE lower(concat('%',:search,'%')) LIMIT :start,:end");
+                $stmt->bindValue(":search", $search, PDO::PARAM_STR);
             } else {
                 $stmt = $db->prepare("SELECT * FROM " . $tablename . " LIMIT :start,:end");
             }

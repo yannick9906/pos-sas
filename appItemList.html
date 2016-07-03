@@ -20,8 +20,8 @@
 <script type="text/javascript" src="libs/jquery-2.2.1.min.js"></script>
 <script type="text/javascript" src="libs/md5.js"></script>
 <script type="text/javascript" src="libs/materialize/js/materialize.min.js"></script>
-<script type="text/javascript" src="js/appUser.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<script type="text/javascript" src="libs/handlebars.js"></script>
+<script type="text/javascript" src="js/appItems.js"></script>
 
 <!-- Dropdown Structure -->
 <ul id="dropdown1" class="dropdown-content">
@@ -39,14 +39,14 @@
             <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Account<i class="mddi mddi-chevron-down right"></i></a></li>
         </ul>
         <ul class="side-nav fixed" id="slide-out">
-            <li id="sidenav-account" class="active"><a href="appUser.html">Mein Account</a></li>
+            <li id="sidenav-account"><a href="appUser.html">Mein Account</a></li>
             <li class="hide-on-large-only"><a href="appLogin.html#Logout">Logout</a></li>
             <li class="divider"></li>
             <li id="sidenav-pos"><a href="appPOS.html">Kasse</a></li>
             <li class="divider padding"></li>
             <li class="no-padding bolden"><a>Lager</a></li>
             <li class="divider padding"></li>
-            <li id="sidenav-list"><a href="appItemList.html">Liste</a></li>
+            <li id="sidenav-list" class="active"><a href="appItemList.html">Liste</a></li>
             <li class="divider padding"></li>
             <li id="sidenav-new" ><a href="appItemIn.html">Einlagern</a></li>
             <li class="divider"></li>
@@ -54,38 +54,62 @@
         <a id="menu-norm" href="#" data-activates="slide-out" class="button-collapse"><i class="mddi mddi-menu"></i></a>
         <!--<a id="menu-back" href="#" onclick="back()" class="button-back"><i class="mddi mddi-backburger"></i></a>-->
     </div>
-    <!--<div class="fixed-action-btn" id="newOrderBtn" style="bottom: 45px; right: 24px;">
-        <a href="#" class="btn-floating btn-large green tooltipped" onclick="toNewOrder()" data-position="left" data-delay="50" data-tooltip="Neuen Auftrag erstellen">
+    <div class="fixed-action-btn" id="newItemBtn" style="bottom: 45px; right: 24px;">
+        <a href="#" class="btn-floating btn-large green tooltipped" onclick="toNewItem()" data-position="left" data-delay="50" data-tooltip="Artikel hinzufügen">
             <i class="large mddi mddi-plus"></i>
         </a>
-    </div>-->
+    </div>
 </nav>
 <main>
-    <!--<div class="progress" id="loading">
+    <div class="progress" id="loading">
         <div class="indeterminate darken-2 green"></div>
-    </div>-->
-    <div class="container" id="userSettings">
-        <form class="row card-panel">
-            <div class="input-field col s12 m6">
-                <input id="usrname" type="text" disabled>
-                <label for="usrname">Benutzername</label>
+    </div>
+    <div class="container row" id="itemList">
+        <form class="col s10" id="live-search">
+            <div class="row" id="search">
+                <div class="input-field col s12">
+                    <i class="mddi mddi-magnify prefix"></i>
+                    <input id="filter" type="text" class="validate">
+                    <label for="filter">In Artikeln suchen ...</label>
+                </div>
             </div>
-            <div class="input-field col s12 m6">
-                <input id="realname" type="text" disabled>
-                <label for="realname">Vor- und Nachname</label>
-            </div>
-            <div class="input-field col s12 m6">
-                <input id="passwd1" type="password">
-                <label for="passwd1">neues Passwort</label>
-            </div>
-            <div class="input-field col s12 m6">
-                <input id="passwd2" type="password">
-                <label for="passwd2">Passwort wiederholen</label>
-            </div>
-            <a class="btn green waves-effect waves-light col s12" onclick="submit()" type="button">
-                <i class="mddi mddi-check"></i>
-            </a>
         </form>
+        <ul id="pages" class="pagination col s12 center center-align">
+        </ul>
+        <table class="highlight col s12">
+            <thead>
+                <tr>
+                    <th data-field="iID">ID</th>
+                    <th data-field="itemName">Artikelname</th>
+                    <th data-field="priceBuy">EK</th>
+                    <th data-field="priceSell">VK</th>
+                    <th data-field="inStock">Verfg.</th>
+                </tr>
+            </thead>
+            <tbody id="items">
+                <tr>
+                    <td>1</td>
+                    <td>Coca Cola 0.5l</td>
+                    <td>2 S</td>
+                    <td>3 S</td>
+                    <td>27</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Fanta 0.5l</td>
+                    <td>2 S</td>
+                    <td>3 S</td>
+                    <td>27</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Sprite 0.5l</td>
+                    <td>2 S</td>
+                    <td>3 S</td>
+                    <td>27</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </main>
 </body>
@@ -99,7 +123,13 @@
         else
             $('.button-collapse').sideNav({closeOnClick: true});
 
-        loadData();
+        $("#filter").keyup(function () {
+            searchString = $(this).val();
+            oldData = [];
+            reqPage = 1;
+            doUpdate();
+        });
+        updateSchedueler();
     });
 </script>
 </html>
