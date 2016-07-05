@@ -51,6 +51,10 @@
             <li class="divider padding"></li>
             <li id="sidenav-new" ><a href="appItemIn.html">Einlagern</a></li>
             <li class="divider"></li>
+            <li style="height: 100px"></li>
+            <li class="green" style="position: fixed; width: 240px; bottom: 0px; font-size: 12px; line-height: 16px; padding:10px">
+                POS Version 0.2.0b<br/>© 2016 Yannick Félix
+            </li>
         </ul>
         <a id="menu-norm" href="#" data-activates="slide-out" class="button-collapse"><i class="mddi mddi-menu"></i></a>
         <a id="menu-back" href="#" onclick="toList()" class="button-back"><i class="mddi mddi-backburger"></i></a>
@@ -88,27 +92,6 @@
                 </tr>
             </thead>
             <tbody id="items">
-                <tr>
-                    <td>1</td>
-                    <td>Coca Cola 0.5l</td>
-                    <td>2 S</td>
-                    <td>3 S</td>
-                    <td>27</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Fanta 0.5l</td>
-                    <td>2 S</td>
-                    <td>3 S</td>
-                    <td>27</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Sprite 0.5l</td>
-                    <td>2 S</td>
-                    <td>3 S</td>
-                    <td>27</td>
-                </tr>
             </tbody>
         </table>
     </div>
@@ -122,17 +105,26 @@
                 <input id="itemName" type="text">
                 <label for="itemName">Artikelname</label>
             </div>
-            <div class="input-field col s12 m4">
-                <input id="priceSell" type="number">
-                <label for="priceSell">Preis EK (Schlopo)</label>
-            </div>
-            <div class="input-field col s12 m4">
+            <div class="input-field col s12 m3">
                 <input id="priceBuy" type="number">
-                <label for="priceBuy">Preis VK (Schlopo)</label>
+                <label for="priceBuy">Preis EK (Schlopo)</label>
             </div>
-            <div class="input-field col s12 m4">
+            <div class="input-field col s12 m3">
+                <input id="priceSell" type="number">
+                <label for="priceSell">Preis VK (Schlopo)</label>
+            </div>
+            <div class="input-field col s12 m3">
+                <input id="priceDeposit" type="number">
+                <label for="priceDeposit">Preis Pfand (Schlopo)</label>
+            </div>
+            <div class="input-field col s12 m3">
                 <input id="inStock" type="number">
                 <label for="inStock">Verfügbar</label>
+            </div>
+            <div class="input-field col s12">
+                <i class="mddi mddi-barcode-scan prefix"></i>
+                <input id="barcode" type="text" length="13">
+                <label for="barcode">Barcode</label>
             </div>
             <a class="btn green waves-effect waves-light col s12" onclick="updateItem()" type="button">
                 <i class="mddi mddi-check"></i>
@@ -149,15 +141,19 @@
                 <input id="n_itemName" type="text">
                 <label for="n_itemName">Artikelname</label>
             </div>
-            <div class="input-field col s12 m4">
-                <input id="n_priceSell" type="number">
-                <label for="n_priceSell">Preis EK (Schlopo)</label>
-            </div>
-            <div class="input-field col s12 m4">
+            <div class="input-field col s12 m3">
                 <input id="n_priceBuy" type="number">
-                <label for="n_priceBuy">Preis VK (Schlopo)</label>
+                <label for="n_priceBuy">Preis EK (Schlopo)</label>
             </div>
-            <div class="input-field col s12 m4">
+            <div class="input-field col s12 m3">
+                <input id="n_priceSell" type="number">
+                <label for="n_priceSell">Preis VK (Schlopo)</label>
+            </div>
+            <div class="input-field col s12 m3">
+                <input id="n_priceDeposit" type="number">
+                <label for="n_priceDeposit">Preis Pfand(Schlopo)</label>
+            </div>
+            <div class="input-field col s12 m3">
                 <input id="n_inStock" type="number">
                 <label for="n_inStock">Verfügbar</label>
             </div>

@@ -41,13 +41,13 @@
             <li class="divider"></li>
             <li class="hide-on-large-only"><a href="appLogin.html#Logout">Logout</a></li>
             <li class="divider"></li>
-            <li id="sidenav-pos"><a href="appPOS.html">Kasse</a></li>
+            <li id="sidenav-pos" class="active"><a href="appPOS.html">Kasse</a></li>
             <li class="divider padding"></li>
             <li class="no-padding bolden"><a>Lager</a></li>
             <li class="divider padding"></li>
             <li id="sidenav-list"><a href="appItemList.html">Liste</a></li>
             <li class="divider padding"></li>
-            <li id="sidenav-new" class="active"><a href="appItemIn.html">Einlagern</a></li>
+            <li id="sidenav-new"><a href="appItemIn.html">Einlagern</a></li>
             <li class="divider"></li>
             <li style="height: 100px"></li>
             <li class="green" style="position: fixed; width: 240px; bottom: 0px; font-size: 12px; line-height: 16px; padding:10px">
@@ -58,39 +58,6 @@
     </div>
 </nav>
 <main>
-    <style>
-        .viewport video {
-            position: fixed;
-            width: 100%;
-            height: auto;
-            top: 65px;
-            left: 240px;
-            right: 0;
-            z-index: 500;
-        }
-
-        .drawingBuffer {
-            position: absolute;
-            width: 100%;
-            height: auto;
-            top: 65px;
-            left: 240px;
-            right: 0;
-            z-index: 1000;
-        }
-        @media only screen and (max-width : 992px) {
-            .viewport video {
-                left: 0px;
-            }
-
-            .drawingBuffer {
-                left: 0px;
-            }
-        }
-    </style>
-    <div class="viewport" id="interactive" style="max-width: 100%">
-
-    </div>
     <div class="container row" id="itemInfo" style="z-index: 100000;">
         <div class="card-panel col s12 row">
             <b>Artikelname: </b><span id="i_itemName"></span><br/>

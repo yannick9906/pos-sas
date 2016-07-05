@@ -119,7 +119,9 @@ function loadData() {
             $("#itemName").val(item.itemName);
             $("#priceBuy").val(item.priceBuy);
             $("#priceSell").val(item.priceSell);
+            $("#priceDeposit").val(item.priceDeposit);
             $("#inStock").val(item.inStock);
+            $("#barcode").val(item.barcode);
             Materialize.updateTextFields();
         }
     });
@@ -129,14 +131,18 @@ function updateItem() {
     var itemname  = $("#itemName").val();
     var priceBuy  = $("#priceBuy").val();
     var priceSell = $("#priceSell").val();
+    var priceDepo = $("#priceDeposit").val();
     var inStock   = $("#inStock").val();
+    var barcode   = $("#barcode").val();
 
-    if(itemname != "" && priceBuy != "" && priceSell != "" && inStock != "") {
+    if(itemname != "" && priceBuy != "" && priceSell != "" && inStock != "" && priceDepo != "") {
         data = {
-            itemname: itemname,
+            itemName: itemname,
             priceBuy: priceBuy,
             priceSell: priceSell,
-            inStock: inStock
+            priceDeposit: priceDepo,
+            inStock: inStock,
+            barcode: barcode
         };
         $.post("api/items/update.php?iID="+currItem, data, function(data) {
             data = JSON.parse(data);
@@ -170,14 +176,16 @@ function createItem() {
     var itemname  = $("#n_itemName").val();
     var priceBuy  = $("#n_priceBuy").val();
     var priceSell = $("#n_priceSell").val();
+    var priceDepo = $("#n_priceDeposit").val();
     var inStock   = $("#n_inStock").val();
     var barcode   = $("#n_barcode").val();
 
-    if(itemname != "" && priceBuy != "" && priceSell != "" && inStock != "" && barcode != "") {
+    if(itemname != "" && priceBuy != "" && priceSell != "" && priceDepo != "" && inStock != "" && barcode != "") {
         data = {
             itemName: itemname,
             priceBuy: priceBuy,
             priceSell: priceSell,
+            priceDepost: priceDepo,
             inStock: inStock,
             barcode: barcode
         };

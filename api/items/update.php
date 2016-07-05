@@ -16,11 +16,12 @@
 
     $item = \POS\Item::fromIID($iID);
 
-    if(isset($_POST["barcode"]))  $item->setBarcode  ($_POST["barcode"]);
-    if(isset($_POST["itemName"])) $item->setItemName ($_POST["itemName"]);
-    if(isset($_POST["priceBuy"])) $item->setPriceBuy (intval($_POST["priceBuy"]));
-    if(isset($_POST["priceSell"]))$item->setPriceSell(intval($_POST["priceSell"]));
-    if(isset($_POST["inStock"]))  $item->setInStock  (intval($_POST["inStock"]));
+    if(isset($_POST["barcode"]))     $item->setBarcode     ($_POST["barcode"]);
+    if(isset($_POST["itemName"]))    $item->setItemName    ($_POST["itemName"]);
+    if(isset($_POST["priceBuy"]))    $item->setPriceBuy    (floatval($_POST["priceBuy"]));
+    if(isset($_POST["priceSell"]))   $item->setPriceSell   (intval($_POST["priceSell"]));
+    if(isset($_POST["priceDeposit"]))$item->setPriceDeposit(intval($_POST["priceDeposit"]));
+    if(isset($_POST["inStock"]))     $item->setInStock     (intval($_POST["inStock"]));
 
     $item->saveChanges();
     echo json_encode(["success" => true]);

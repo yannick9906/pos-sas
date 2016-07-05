@@ -12,11 +12,12 @@
     require_once "../../classes/Util.php";
     //$user = \POS\Util::checkSession();
 
-    $itemName  = $_POST["itemName"];
-    $priceBuy  = intval($_POST["priceBuy"]);
-    $priceSell = intval($_POST["priceSell"]);
-    $inStock   = intval($_POST["inStock"]);
-    $barcode   = $_POST["barcode"];
+    $itemName     = $_POST["itemName"];
+    $priceBuy     = intval($_POST["priceBuy"]);
+    $priceSell    = intval($_POST["priceSell"]);
+    $priceDeposit = intval($_POST["priceDeposit"]);
+    $inStock      = intval($_POST["inStock"]);
+    $barcode      = $_POST["barcode"];
 
-    \POS\Item::createNew($itemName, $inStock, $priceBuy, $priceSell, $barcode);
+    \POS\Item::createNew($itemName, $inStock, $priceBuy, $priceSell, $priceDeposit, $barcode);
     echo json_encode(["success" => true]);

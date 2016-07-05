@@ -130,7 +130,7 @@
          */
         private function bindValues($stmt, $fields) {
             foreach($fields as $field => $data) {
-                if(is_numeric($data)) {
+                if(is_int($data)) {
                     $stmt->bindValue($field, $data, PDO::PARAM_INT);
                 } elseif(is_bool($data)) {
                     $stmt->bindValue($field, $data, PDO::PARAM_BOOL);

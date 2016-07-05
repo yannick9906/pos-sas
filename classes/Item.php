@@ -10,27 +10,30 @@
 
 
     class Item {
-        private $pdo, $iID, $itemName, $inStock, $priceBuy, $priceSell, $barcode;
+        private $pdo, $iID, $itemName, $inStock, $priceBuy, $priceSell, $priceDeposit, $barcode;
 
         /**
          * Item constructor.
          *
-         * @param int $iID
-         * @param string $itemName
-         * @param int $inStock
-         * @param int $priceBuy
-         * @param int $priceSell
-         * @param string $barcode
+         * @param $iID
+         * @param $itemName
+         * @param $inStock
+         * @param $priceBuy
+         * @param $priceSell
+         * @param $priceDeposit
+         * @param $barcode
          */
-        public function __construct($iID, $itemName, $inStock, $priceBuy, $priceSell, $barcode) {
+        public function __construct($iID, $itemName, $inStock, $priceBuy, $priceSell, $priceDeposit, $barcode) {
             $this->iID = $iID;
             $this->itemName = utf8_encode($itemName);
             $this->inStock = $inStock;
             $this->priceBuy = $priceBuy;
+            $this->priceDeposit = $priceDeposit;
             $this->priceSell = $priceSell;
             $this->barcode = $barcode;
             $this->pdo = new PDO_MYSQL();
         }
+
 
         /**
          * Constructs a new object from a specific iID
@@ -41,7 +44,7 @@
         public static function fromIID($iID) {
             $pdo = new PDO_MYSQL();
             $res = $pdo->query("SELECT * FROM pos_item WHERE iID = :iid", [":iid" => $iID]);
-            return new Item($res->iID, $res->itemName, $res->inStock, $res->priceBuy, $res->priceSell, $res->barcode);
+            return new Item($res->iID, $res->itemName, $res->inStock, $res->priceBuy, $res->priceSell, $res->priceDeposit, $res->barcode);
         }
 
         /**
@@ -53,7 +56,7 @@
         public static function fromBarcode($barcode) {
             $pdo = new PDO_MYSQL();
             $res = $pdo->query("SELECT * FROM pos_item WHERE barcode = :barcode", [":barcode" => $barcode]);
-            return new Item($res->iID, $res->itemName, $res->inStock, $res->priceBuy, $res->priceSell, $res->barcode);
+            return new Item($res->iID, $res->itemName, $res->inStock, $res->priceBuy, $res->priceSell, $res->priceDeposit, $res->barcode);
         }
 
         /**
@@ -79,7 +82,8 @@
                     "inStock" => $row->inStock,
                     "priceBuy" => $row->priceBuy,
                     "priceSell" => $row->priceSell,
-                    "check" => md5($row->iID+$row->itemName+$row->inStock+$row->priceBuy+$row->priceSell)
+                    "priceDeposit" => $row->priceDeposit,
+                    "check" => md5($row->iID.$row->itemName.$row->inStock.$row->priceBuy.$row->priceSell.$row->priceDeposit)
                 ]);
             }
             return $hits;
@@ -109,6 +113,7 @@
                     $row->inStock,
                     $row->priceBuy,
                     $row->priceSell,
+                    $row->priceDeposit,
                     $row->barcode)
                 );
             }
@@ -141,18 +146,20 @@
          * Creates a new item in DB.
          *
          * @param string $itemName
-         * @param int $inStock
-         * @param int $priceBuy
-         * @param int $priceSell
+         * @param int    $inStock
+         * @param float  $priceBuy
+         * @param int    $priceSell
+         * @param int    $priceDeposit
          * @param string $barcode
          */
-        public static function createNew($itemName, $inStock, $priceBuy, $priceSell, $barcode) {
+        public static function createNew($itemName, $inStock, $priceBuy, $priceSell, $priceDeposit, $barcode) {
             $pdo = new PDO_MYSQL();
             $pdo->queryInsert("pos_item",
                 ["itemName" => $itemName,
                  "inStock" => $inStock,
                  "priceBuy" => $priceBuy,
                  "priceSell" => $priceSell,
+                 "priceDeposit" => $priceDeposit,
                  "barcode" => $barcode]
             );
         }
@@ -167,6 +174,7 @@
                  "inStock" => $this->inStock,
                  "priceBuy" => $this->priceBuy,
                  "priceSell" => $this->priceSell,
+                 "priceDeposit" => $this->priceDeposit,
                  "barcode" => $this->barcode],
                 "iID = :iid",
                 ["iid" => $this->iID]
@@ -193,6 +201,7 @@
                 "inStock" => $this->inStock,
                 "priceBuy" => $this->priceBuy,
                 "priceSell" => $this->priceSell,
+                "priceDeposit" => $this->priceDeposit,
                 "barcode" => $this->barcode
             ];
         }
@@ -279,5 +288,19 @@
          */
         public function setBarcode($barcode) {
             $this->barcode = $barcode;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function getPriceDeposit() {
+            return $this->priceDeposit;
+        }
+
+        /**
+         * @param mixed $priceDeposit
+         */
+        public function setPriceDeposit($priceDeposit) {
+            $this->priceDeposit = $priceDeposit;
         }
     }
