@@ -41,13 +41,17 @@
             <li class="divider"></li>
             <li class="hide-on-large-only"><a href="appLogin.html#Logout">Logout</a></li>
             <li class="divider"></li>
+            <li class="no-padding bolden"><a>Kassieren</a></li>
+            <li class="divider padding"></li>
             <li id="sidenav-pos" class="active"><a href="appPOS.html">Kasse</a></li>
+            <li class="divider padding"></li>
+            <li id="sidenav-deposit"><a href="appDeposit.html">Pfandrückgabe</a></li>
             <li class="divider padding"></li>
             <li class="no-padding bolden"><a>Lager</a></li>
             <li class="divider padding"></li>
             <li id="sidenav-list"><a href="appItemList.html">Liste</a></li>
             <li class="divider padding"></li>
-            <li id="sidenav-new"><a href="appItemIn.html">Einlagern</a></li>
+            <li id="sidenav-new" ><a href="appItemIn.html">Einlagern</a></li>
             <li class="divider"></li>
             <li style="height: 100px"></li>
             <li class="green" style="position: fixed; width: 240px; bottom: 0px; font-size: 12px; line-height: 16px; padding:10px">
@@ -58,14 +62,59 @@
     </div>
 </nav>
 <main>
-    <div class="container row" id="itemInfo" style="z-index: 100000;">
-        <div class="card-panel col s12 row">
-            <b>Artikelname: </b><span id="i_itemName"></span><br/>
-            <b>Preis EK: </b>   <span id="i_priceBuy"></span> S<br/>
-            <b>Preis VK: </b>   <span id="i_priceSell"></span> S<br/>
-            <b>Verfügbar: </b>  <span id="i_inStock"></span><span class="green-text"> +1</span> Stk.<br/>
-            <br/>
-            <a href="#!" onclick="doScan()" class="btn green center col s12">Nächstes</a><br/>&nbsp;
+    <div class="container row">
+        <div class="col s12 m5">
+            <form class="card-panel row">
+                <div class="input-field col s12">
+                    <i class="mddi mddi-barcode-scan prefix"></i>
+                    <input id="barcode" type="text" autofocus>
+                    <label for="barcode">Hier scannen</label>
+                </div>
+            </form>
+            <div class="card-panel row">
+                <p class="green-text header col s12">Kunde</p>
+                <span class="bolden col s6"># :</span><span class="col s6">01</span><br/>
+                <span class="bolden col s6">Name:</span><span class="col s6">Lennard Forkert</span><br/>
+                <span class="bolden col s6">Code:</span><span class="col s6">123456789013</span><br/>
+                <span class="bolden col s6">Wert:</span><span class="col s6">120 S</span><br/>
+                <span class="bolden col s6">Restpfand:</span><span class="col s6">299 S</span><br/>
+            </div>
+            <div class="row">
+                <a href="#!" class="btn green waves-effect waves-ripple waves-light col s12">Abschliessen</a>
+            </div>
+        </div>
+        <div class="col s12 m6 offset-m1">
+            <div class="card-panel row">
+                <p class="green-text header col s12">Einkauf</p>
+                <span class="bolden col s6"># :</span><span class="col s6">01</span><br/>
+                <span class="bolden col s6">Uhrzeit:</span><span class="col s6">06. Jul 2016 - 22:20</span><br/>
+                <span class="bolden col s6">Warenwert:</span><span class="col s6">27 S</span><br/>
+                <span class="bolden col s6">zzgl Pfand:</span><span class="col s6">5 S</span><br/>
+                <span class="bolden col s6">Gesamt:</span><span class="col s6 bolden sum">32 S</span><br/>
+            </div>
+            <div class="card-panel row">
+                <table class="highlight col s12">
+                    <thead>
+                    <tr>
+                        <th data-field="itemName">Artikelname</th>
+                        <th data-field="amount">Menge</th>
+                        <th data-field="priceSell">VK</th>
+                    </tr>
+                    </thead>
+                    <tbody id="items">
+                        <tr>
+                            <td>Angelblei</td>
+                            <td>17</td>
+                            <td>1 S</td>
+                        </tr>
+                        <tr>
+                            <td>Angler's Drink</td>
+                            <td>5</td>
+                            <td>2 S</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </main>
