@@ -12,8 +12,8 @@
     require_once "../../classes/Util.php";
     $user = \POS\Util::checkSession();
 
-    $name    = $_POST["name"];
-    $barcode = $_POST["barcode"];
+    if(isset($_POST["name"])) $name = $_POST["name"]; else $name = "";
+    $barcode = str_replace("a", "", $_POST["barcode"]);
 
     \POS\Customer::createNew($name, $barcode);
     echo json_encode(["success" => true]);

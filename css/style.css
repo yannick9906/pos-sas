@@ -7,6 +7,15 @@ header, main, footer {
         padding-left: 0;
     }
 }
+
+.bolden {
+    font-weight: bold;
+}
+
+.italicize {
+    font-style: italic;
+}
+
 .button-back {
     line-height: 58px;
     height: 58px;

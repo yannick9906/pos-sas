@@ -10,7 +10,7 @@
 
 
     class Receipt {
-        private $pdo, $rID, $cID, $timestamp, $totalBuy, $totalSell;
+        private $pdo, $rID, $cID, $timestamp, $totalBuy, $totalSell, $totalDeposit;
 
         /**
         * Receipt constructor.
@@ -21,12 +21,13 @@
         * @param $totalBuy
         * @param $totalSell
         */
-        public function __construct($rID, $cID, $timestamp, $totalBuy, $totalSell) {
+        public function __construct($rID, $cID, $timestamp, $totalBuy, $totalSell, $totalDeposit) {
             $this->rID = $rID;
             $this->cID = $cID;
             $this->timestamp = strtotime($timestamp);
             $this->totalBuy = $totalBuy;
             $this->totalSell = $totalSell;
+            $this->totalDeposit = $totalDeposit;
             $this->pdo = new PDO_MYSQL();
         }
 
@@ -39,7 +40,7 @@
         public static function fromRID($rID) {
             $pdo = new PDO_MYSQL();
             $res = $pdo->query("SELECT * FROM pos_receipt WHERE rID = :rid", [":rid" => $rID]);
-            return new Receipt($res->rID, $res->cID, $res->timestamp, $res->totalBuy, $res->totalSell);
+            return new Receipt($res->rID, $res->cID, $res->timestamp, $res->totalBuy, $res->totalSell, $res->totalDeposit);
         }
 
         /**
@@ -53,9 +54,10 @@
             $pdo->queryInsert("pos_receipt",
                 [
                    "cID" => $cID,
-                   "timestamp" => date("Y-M-D H:i:s"),
+                   "timestamp" => date("Y-m-d H:i:s"),
                    "totalBuy" => 0,
-                   "totalSell" => 0
+                   "totalSell" => 0,
+                   "totalDeposit" => 0
                 ]);
             $res = $pdo->query("select rID from pos_receipt order by rID desc limit 1");
             return self::fromRID($res->rID);
@@ -73,7 +75,8 @@
                 "timestamp" => date("d. M Y - H:i:s", $this->timestamp),
                 "totalBuy" => $this->totalBuy,
                 "totalSell" => $this->totalSell,
-                "sum" => $this->totalBuy + $this->totalSell
+                "totalDeposit" => $this->totalDeposit,
+                "sum" => $this->totalBuy + $this->totalDeposit
             ];
         }
 
@@ -145,5 +148,19 @@
          */
         public function setTotalSell($totalSell) {
             $this->totalSell = $totalSell;
+        }
+
+        /**
+         * @return int
+         */
+        public function getTotalDeposit() {
+            return $this->totalDeposit;
+        }
+
+        /**
+         * @param int $totalDeposit
+         */
+        public function setTotalDeposit($totalDeposit) {
+            $this->totalDeposit = $totalDeposit;
         }
     }

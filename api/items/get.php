@@ -24,7 +24,7 @@
             echo json_encode(["success" => false, "errorCode" => 2]);
         }
     } elseif(isset($_GET["barcode"])) {
-        $barcode = intval($_GET["barcode"]);
+        $barcode = $_GET["barcode"];
         $item = \POS\Item::fromBarcode($barcode);
 
         if($item->getIID() != null) {

@@ -24,7 +24,7 @@
             echo json_encode(["success" => false, "errorCode" => 2]);
         }
     } elseif(isset($_GET["barcode"])) {
-        $barcode = intval($_GET["barcode"]);
+        $barcode = $_GET["barcode"];
         $customer = \POS\Customer::fromBarcode($barcode);
 
         if($customer->getCID() != null) {
@@ -32,6 +32,7 @@
             $array["success"] = true;
             echo json_encode($array);
         } else {
+            var_dump($customer);
             echo json_encode(["success" => false, "errorCode" => 2]);
         }
     } else {

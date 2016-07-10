@@ -14,6 +14,7 @@
 
     $cID = $_POST["cID"];
 
-    $toEncode["receipt"] = \POS\Receipt::createNew($cID)->asArray();
-    $toEncode["success"] = true;
+    $receipt = \POS\Receipt::createNew($cID);
+    $toEncode["receipt"] = $receipt->asArray();
+    $toEncode["success"] = $receipt->getRID() != null;
     echo json_encode($toEncode);

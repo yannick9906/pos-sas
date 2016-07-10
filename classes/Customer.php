@@ -30,7 +30,7 @@
          * Creates a new Customer Object from a given customer ID
          *
          * @param $cID int Customer ID
-         * @return User
+         * @return Customer
          */
         public static function fromCID($cID) {
             $pdo = new PDO_MYSQL();
@@ -42,11 +42,12 @@
          * Creates a new Customer Object from a given barcode
          *
          * @param $barcode string Customer Barcode
-         * @return User
+         * @return Customer
          */
         public static function fromBarcode($barcode) {
             $pdo = new PDO_MYSQL();
             $res = $pdo->query("SELECT * FROM pos_customer WHERE barcode = :barcode", [":barcode" => $barcode]);
+
             return new Customer($res->cID, $res->name, $res->barcode);
         }
 
