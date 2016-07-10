@@ -89,7 +89,7 @@
                 $bindString .= ($field === $lastField ? ' ' : ',');
             }
 
-            $stmt = $db->prepare("insert into " . $table . " set " . $bindString);
+            $stmt = $db->prepare("insert into `" . $table . "` set " . $bindString);
             $this->bindValues($stmt, $fields);
 
             $stmt->execute();
@@ -114,7 +114,7 @@
                 $bindString .= ($field === $lastField ? ' ' : ',');
             }
 
-            $stmt = $db->prepare("update " . $table . " set " . $bindString . " where " . $where);
+            $stmt = $db->prepare("update `" . $table . "` set " . $bindString . " where " . $where);
             $this->bindValues($stmt, $fields);
             $this->bindValues($stmt, $wherefields);
 

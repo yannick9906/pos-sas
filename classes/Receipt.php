@@ -64,6 +64,65 @@
         }
 
         /**
+         * Adds an Item to this receipt
+         *
+         * @param $item Item
+         */
+        public function addItem($item) {
+            $this->totalDeposit += $item->getPriceDeposit();
+            $this->totalSell += $item->getPriceSell();
+            $this->totalBuy += $item->getPriceBuy();
+            $this->pdo->queryInsert("pos_receipt-item",
+                [
+                    "rID" => $this->rID,
+                    "iID" => $item->getIID(),
+                    "itemDeposit" => $item->getPriceDeposit(),
+                    "itemPrice" => $item->getPriceSell(),
+                    "itemDepositPaid" => 0
+                ]);
+            $this->saveChanges();
+        }
+
+        public function getItems() {
+            $res = $this->pdo->queryMulti("select * from `pos_receipt-item` where rID = :rid", [":rid" => $this->rID]);
+            $inList = [];
+            $list = [];
+            while($row = $res->fetchObject()) {
+                $item = Item::fromIID($row->iID);
+                if(in_array($row->iID, $inList)) {
+                    $list[$res->iID]["amount"]++;
+                } else {
+                    $array = [
+                        "iID" => $row->iID,
+                        "itemName" => $item->getItemName(),
+                        "priceSell" => $item->getPriceSell(),
+                        "amount" => 1
+                    ];
+                    array_push($inList, $row->iID);
+                    $list[$res->iID] = $array;
+                }
+            }
+            $newlist = [];
+            foreach ($list as $value) {
+                array_push($newlist, $value);
+            }
+            return $newlist;
+        }
+
+        public function saveChanges() {
+            $this->pdo->queryUpdate(
+                "pos_receipt",
+                ["cID" => $this->cID,
+                    "timestamp" => date("Y-m-d H:i:s", $this->timestamp),
+                    "totalBuy" => $this->totalBuy,
+                    "totalSell" => $this->totalSell,
+                    "totalDeposit" => $this->totalDeposit],
+                "rID = :rID",
+                ["rID" => $this->rID]
+            );
+        }
+
+        /**
          *  Turns this instance into a array
          *
          * @return array
@@ -76,7 +135,7 @@
                 "totalBuy" => $this->totalBuy,
                 "totalSell" => $this->totalSell,
                 "totalDeposit" => $this->totalDeposit,
-                "sum" => $this->totalBuy + $this->totalDeposit
+                "sum" => $this->totalSell + $this->totalDeposit
             ];
         }
 

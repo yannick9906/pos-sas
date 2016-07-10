@@ -18,9 +18,10 @@
 <body>
 <!--Import jQuery before materialize.js-->
 <script type="text/javascript" src="libs/jquery-2.2.1.min.js"></script>
-<script type="text/javascript" src="libs/quagga.min.js"></script>
+<script type="text/javascript" src="libs/handlebars.js"></script>
 <script type="text/javascript" src="libs/materialize/js/materialize.min.js"></script>
 <script type="text/javascript" src="js/appPOS.js"></script>
+
 
 <!-- Dropdown Structure -->
 <ul id="dropdown1" class="dropdown-content">
@@ -84,7 +85,7 @@
                 <span class="bolden col s6">Restpfand:</span><span class="col s6" id="customer_depositLeft">0 S</span><br/>
             </div>
             <div class="row">
-                <a href="#!" class="btn green waves-effect waves-ripple waves-light col s12">Abschliessen</a>
+                <a href="#!" onclick="finish()" class="btn green waves-effect waves-ripple waves-light col s12">Abschliessen</a>
             </div>
         </div>
         <div class="col s12 m6 offset-m1">
@@ -126,7 +127,6 @@
         else
             $('.button-collapse').sideNav({closeOnClick: true});
         $("#itemInfo").hide();
-        doScan();
     });
 </script>
 </html>
