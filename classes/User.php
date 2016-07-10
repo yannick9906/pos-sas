@@ -41,6 +41,7 @@
             $res = $pdo->query("SELECT * FROM pos_user WHERE uID = :uid", [":uid" => $uID]);
             return new User($res->uID, $res->username, $res->realname, $res->passhash);
         }
+        
         /**
          * Creates a new User Object from a give username
          *
