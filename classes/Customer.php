@@ -103,9 +103,11 @@
          * @return array
          */
         public function asArray() {
+            if($this->name != "") $name = $this->name;
+            else $name = "Kunde #".$this->cID;
             return [
                 "cID" => $this->cID,
-                "name" => $this->name,
+                "name" => $name,
                 "barcode" => $this->barcode
             ];
         }
