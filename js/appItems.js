@@ -10,6 +10,8 @@ var listTmplt = Handlebars.compile(`
         <td onclick="toDetail({{iID}})">{{priceBuy}} S</td>
         <td onclick="toDetail({{iID}})">{{priceSell}} S</td>
         <td onclick="toDetail({{iID}})">{{inStock}} Stk.</td>
+        <td onclick="toDetail({{iID}})">{{sold}} Stk.</td>
+        <td onclick="toDetail({{iID}})">{{{profitHTML}}}</td>
     </tr>
     `);
 var searchString = "";

@@ -99,7 +99,7 @@
          *
          * @return Item[]
          */
-        public static function getListObjects($page, $pagesize, $search) {
+        public static function getListObjects($page = 1, $pagesize = 75, $search = "") {
             $pdo = new PDO_MYSQL();
             $startElem = ($page-1) * $pagesize;
             $endElem = $pagesize;
@@ -211,8 +211,35 @@
                 "priceBuy" => $this->priceBuy,
                 "priceSell" => $this->priceSell,
                 "priceDeposit" => $this->priceDeposit,
-                "barcode" => $this->barcode
+                "barcode" => $this->barcode,
+                "sold" => $this->getAmountSold(),
+                "profit" => $this->getItemProfit(),
+                "profitHTML" => Util::redGreenNegPos($this->getItemProfit())
             ];
+        }
+
+        /**
+         * Returns the profit made through this item
+         *
+         * @return float profit in positive or negative Schlopo
+         */
+        public function getItemProfit() {
+            $amountSold = $this->getAmountSold();
+            $moneyIn = $amountSold * $this->priceSell;
+            $moneyOut = $amountSold * $this->priceBuy;
+            $moneyLeft = $this->inStock * $this->priceBuy;
+            $total = $moneyIn - $moneyOut - $moneyLeft;
+            return $total;
+        }
+
+        /**
+         * Returns the amount of items already sold
+         *
+         * @return int Amount
+         */
+        public function getAmountSold() {
+            $res = $this->pdo->query("select count(*) as count from `pos_receipt-item` where iID = :iid", [":iid" => $this->iID]);
+            return $res->count;
         }
 
         /**

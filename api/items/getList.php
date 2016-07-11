@@ -16,5 +16,11 @@
     $pagesize = 75;
     $search = $_GET["search"];
 
-    $items = \POS\Item::getList($page, $pagesize, $search);
-    echo json_encode($items);
+    $itemObj = \POS\Item::getListObjects($page, $pagesize, $search);
+    $meta = \POS\Item::getListMeta($page, $pagesize, $search);
+    $items = [];
+    foreach ($itemObj as $item) {
+        array_push($items, $item->asArray());
+    }
+    $meta["items"] = $items;
+    echo json_encode($meta);

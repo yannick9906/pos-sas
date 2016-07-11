@@ -86,4 +86,10 @@ class Util {
                        'seconds' => $dt->format('s'));
         return $array["days"]." Tage ".$array["hours"]."h ".$array["minutes"]."m ".$array["seconds"]."s";
     }
+
+    public static function redGreenNegPos($value) {
+        if($value > 0) return "<span class='green-text'>+$value S</span>";
+        if($value == 0) return "<span class='black-text'>$value S</span>";
+        else return "<span class='red-text'>$value S</span>";
+    }
 }
