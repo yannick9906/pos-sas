@@ -190,6 +190,15 @@
         }
 
         /**
+         * Set Item as deposit paid
+         */
+        public function depositItem() {
+            $this->pdo->queryUpdate("pos_receipt-item",
+                ["itemDepositPaid" => true],
+                "iID = :iID limit 1",
+                ["iID" => $this->iID]);
+        }
+        /**
          * Turns this instance into an array
          *
          * @return array Array

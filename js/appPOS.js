@@ -69,8 +69,8 @@ function addItem() {
     var barcode = $("#barcode").val();
     $.getJSON("api/receipts/addItem.php?barcode="+barcode+"&rID="+currReceipt, null, function(data) {
         if(data.error == "NoLogin") window.location.href = "appLogin.html";
-        else if(data.success) Materialize.toast("Artikel hinzugefügt.");
-        else Materialize.toast("Artikel existiert nicht.");
+        else if(data.success) Materialize.toast("Artikel hinzugefügt.", 500);
+        else Materialize.toast("Artikel existiert nicht.", 2000, "red");
         updateDetails();
         updateList();
     });
@@ -108,6 +108,8 @@ function updateDetails() {
 
 function finish() {
     currReceipt = -1;
+    Materialize.toast("Abgeschlossen.", 2000, "green");
+
     $("#receipt_id").html(0);
     $("#receipt_value").html("0 S");
     $("#receipt_deposit").html("0 S");

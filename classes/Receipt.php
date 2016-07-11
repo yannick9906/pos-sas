@@ -76,11 +76,14 @@
                 [
                     "rID" => $this->rID,
                     "iID" => $item->getIID(),
+                    "cID" => $this->cID,
                     "itemDeposit" => $item->getPriceDeposit(),
                     "itemPrice" => $item->getPriceSell(),
                     "itemDepositPaid" => 0
                 ]);
             $this->saveChanges();
+            $item->setInStock($item->getInStock()-1);
+            $item->saveChanges();
         }
 
         public function getItems() {
@@ -90,7 +93,7 @@
             while($row = $res->fetchObject()) {
                 $item = Item::fromIID($row->iID);
                 if(in_array($row->iID, $inList)) {
-                    $list[$res->iID]["amount"]++;
+                    $list[$row->iID]["amount"]++;
                 } else {
                     $array = [
                         "iID" => $row->iID,
@@ -99,7 +102,7 @@
                         "amount" => 1
                     ];
                     array_push($inList, $row->iID);
-                    $list[$res->iID] = $array;
+                    $list[$row->iID] = $array;
                 }
             }
             $newlist = [];

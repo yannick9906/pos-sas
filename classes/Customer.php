@@ -98,6 +98,65 @@
             );
         }
 
+        public function getDepositItems() {
+            $stmt = $this->pdo->queryMulti("select * from `pos_receipt-item` where cID = :cid and itemDeposit = 1 and itemDepositPaid = 0", [":cid" => $this->cID]);
+            $list = [];
+            $inList = [];
+            while($row = $stmt->fetchObject()) {
+                $item = Item::fromIID($row->iID);
+                if(in_array($row->iID, $inList)) {
+                    $list[$row->iID]["amount"]++;
+                } else {
+                    $array = [
+                        "iID" => $row->iID,
+                        "itemName" => $item->getItemName(),
+                        "priceDeposit" => $item->getPriceDeposit(),
+                        "amount" => 1
+                    ];
+                    array_push($inList, $row->iID);
+                    $list[$row->iID] = $array;
+                }
+            }
+            $newlist = [];
+            foreach ($list as $value) {
+                array_push($newlist, $value);
+            }
+            return $newlist;
+        }
+
+        public function depositItem($barcode) {
+            $stmt = $this->pdo->queryMulti("select * from `pos_receipt-item` where cID = :cid and itemDeposit = 1 and itemDepositPaid = 0", [":cid" => $this->cID]);
+            $list = [];
+            $inList = [];
+            while($row = $stmt->fetchObject()) {
+                $item = Item::fromIID($row->iID);
+                if(in_array($row->iID, $inList)) {
+                    $list[$row->iID]["amount"]++;
+                } else {
+                    $array = [
+                        "id" => $row->id,
+                        "iID" => $row->iID,
+                        "itemName" => $item->getItemName(),
+                        "priceDeposit" => $item->getPriceDeposit(),
+                        "barcode" => $item->getBarcode(),
+                        "amount" => 1
+                    ];
+                    array_push($inList, $row->iID);
+                    $list[$row->iID] = $array;
+                }
+            }
+            foreach ($list as $value) {
+                if($value["barcode"] == $barcode) {
+                    $this->pdo->queryUpdate("pos_receipt-item",
+                        ["itemDepositPaid" => 1],
+                        "id = :id", ["id" => $value["id"]]
+                    );
+                    return true;
+                }
+            }
+            return false;
+        }
+
         /**
          * Makes this class as an array to use for tables etc.
          *
