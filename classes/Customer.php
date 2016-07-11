@@ -98,6 +98,44 @@
             );
         }
 
+        /**
+         * Returns all Items bought by this customer
+         *
+         * @return array Items
+         */
+        public function getAllItems() {
+            $stmt = $this->pdo->queryMulti("select * from `pos_receipt-item` where cID = :cid", [":cid" => $this->cID]);
+            $list = [];
+            $inList = [];
+            while($row = $stmt->fetchObject()) {
+                $item = Item::fromIID($row->iID);
+                if(in_array($row->iID, $inList)) {
+                    $list[$row->iID]["amount"]++;
+                } else {
+                    $array = [
+                        "iID" => $row->iID,
+                        "itemName" => $item->getItemName(),
+                        "priceDeposit" => $item->getPriceDeposit(),
+                        "priceSell" => $item->getPriceSell(),
+                        "priceBuy" => $item->getPriceBuy(),
+                        "amount" => 1
+                    ];
+                    array_push($inList, $row->iID);
+                    $list[$row->iID] = $array;
+                }
+            }
+            $newlist = [];
+            foreach ($list as $value) {
+                array_push($newlist, $value);
+            }
+            return $newlist;
+        }
+
+        /**
+         * Get all items that are left a deposit
+         *
+         * @return array Items
+         */
         public function getDepositItems() {
             $stmt = $this->pdo->queryMulti("select * from `pos_receipt-item` where cID = :cid and itemDeposit = 1 and itemDepositPaid = 0", [":cid" => $this->cID]);
             $list = [];
@@ -124,6 +162,12 @@
             return $newlist;
         }
 
+        /**
+         * Pays a deposit
+         *
+         * @param $barcode The Items barcode
+         * @return bool If it worked
+         */
         public function depositItem($barcode) {
             $stmt = $this->pdo->queryMulti("select * from `pos_receipt-item` where cID = :cid and itemDeposit = 1 and itemDepositPaid = 0", [":cid" => $this->cID]);
             $list = [];
@@ -158,6 +202,34 @@
         }
 
         /**
+         * Returns the amount of Deposit is left on this customer
+         *
+         * @return int Amount in Schlopo
+         */
+        public function getDepositValueLeft() {
+            $items = $this->getDepositItems();
+            $value = 0;
+            foreach ($items as $item) {
+                $value += $item["priceDeposit"] * $item["amount"];
+            }
+            return $value;
+        }
+
+        /**
+         * Returns the amount of Money made with this customer
+         *
+         * @return int Amount in Schlopo
+         */
+        public function getBoughtValue() {
+            $items = $this->getAllItems();
+            $value = 0;
+            foreach ($items as $item) {
+                $value += ($item["priceSell"]-$item["priceBuy"]) * $item["amount"];
+            }
+            return $value;
+        }
+
+        /**
          * Makes this class as an array to use for tables etc.
          *
          * @return array
@@ -168,7 +240,9 @@
             return [
                 "cID" => $this->cID,
                 "name" => $name,
-                "barcode" => $this->barcode
+                "barcode" => $this->barcode,
+                "value" => $this->getBoughtValue(),
+                "depositLeft" => $this->getDepositValueLeft()
             ];
         }
 

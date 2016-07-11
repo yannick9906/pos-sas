@@ -37,8 +37,8 @@ function checkCustomer() {
                     $("#customer_id").html(data.cID);
                     $("#customer_name").html(data.name);
                     $("#customer_barcode").html(data.barcode);
-                    $("#customer_value").html(0 + " S");
-                    $("#customer_depositLeft").html(0 + " S");
+                    $("#customer_value").html(data.value + " S");
+                    $("#customer_depositLeft").html(data.depositLeft + " S");
                     updateList();
                 }
             });

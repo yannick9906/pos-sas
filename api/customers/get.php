@@ -9,6 +9,7 @@
     require_once "../../classes/Customer.php";
     require_once "../../classes/PDO_Mysql.php";
     require_once "../../classes/User.php";
+    require_once "../../classes/Item.php";
     require_once "../../classes/Util.php";
     $user = \POS\Util::checkSession();
 
